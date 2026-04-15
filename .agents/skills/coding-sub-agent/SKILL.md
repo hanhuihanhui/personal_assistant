@@ -90,7 +90,7 @@ jobs:
 ### 模型配置
 ```bash
 # 通过命令行指定模型
-coco -c model.name=gpt-5.2
+coco -c model.name=gpt-5.4
 
 ```
 
