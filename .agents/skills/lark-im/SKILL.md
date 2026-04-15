@@ -38,6 +38,10 @@ Chat (oc_xxx)
 - `--as bot` means **bot identity** and uses `tenant_access_token`. Calls run as the app bot, so behavior depends on the bot's membership, app visibility, availability range, and bot-specific scopes.
 - If an IM API says it supports both `user` and `bot`, the token type changes who the operator is. The same API can succeed with one identity and fail with the other because owner/admin status, chat membership, tenant boundary, or app availability are checked against the current caller.
 
+### Bot Must Be In Chat To Send
+
+When sending messages with `--as bot`, the bot must already be in the target group chat. If you hit API error `code: 230002` (`Bot/User can NOT be out of the chat.`), follow the runbook in [`+messages-send`](references/lark-im-messages-send.md) (invite bot via `chat.members.create --as user`, then retry send).
+
 ### Sender Name Resolution with Bot Identity
 
 When using bot identity (`--as bot`) to fetch messages (e.g. `+chat-messages-list`, `+threads-messages-list`, `+messages-mget`), sender names may not be resolved (shown as open_id instead of display name). This happens when the bot cannot access the user's contact info.

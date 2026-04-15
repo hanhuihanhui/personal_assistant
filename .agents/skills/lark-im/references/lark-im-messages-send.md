@@ -16,7 +16,8 @@ Messages sent by this tool are visible to other people. Before calling it, you *
 
 **Do not** send messages without explicit user approval.
 
-When using `--as bot`, the message is sent in the app's name, so make sure the app has already been added to the target chat.
+When using `--as bot`, the message is sent in the app's name, so make sure the app (bot) has already been added to the target chat.
+If it is not in the target chat yet, do **not** guess: follow the "Bot Not In Chat (230002)" troubleshooting section below and get explicit approval before inviting the bot into the chat.
 
 
 ## Choose The Right Content Flag
@@ -174,6 +175,14 @@ lark-cli im +messages-send --chat-id oc_xxx --markdown $'## Test\n\nhello' --dry
 - Using `--content` without making the JSON match the effective `--msg-type`.
 - Explicitly setting `--msg-type` to something that conflicts with `--text`, `--markdown`, or media flags.
 - Mixing `--text`, `--markdown`, or `--content` with media flags in one command.
+
+## Common Errors and Troubleshooting
+
+| Symptom | Root Cause | Fix |
+|---------|------------|-----|
+| `HTTP 400: Bot/User can NOT be out of the chat.` (API error `code: 230002`) when sending with `--as bot` | The bot is not a member of the target group chat | 1) Confirm with the user that adding the bot to the group is acceptable (this is a visible write operation). 2) Get the current app's `appId`: `lark-cli config show`. 3) Invite the bot into the group using **user identity** (recommended to `--dry-run` first): `lark-cli im chat.members create --as user --params '{"chat_id":"oc_xxx","member_id_type":"app_id","succeed_type":1}' --data '{"id_list":["<app_id>"]}'`. 4) Retry `lark-cli im +messages-send --as bot ...`. See also: `knowledge/methods/lark-bot-send-to-existing-group.md`. |
+| Permission denied when inviting bot to a group | Missing app scopes or the current user lacks permission to add members | Check app scopes include `im:chat.members:write_only` and ensure the current user is in the target chat and allowed to invite members (owner/admin restrictions may apply). |
+| Bot can be invited but message send still fails | Missing bot send scope or the bot still isn't in the chat (invite pending approval) | Ensure app has `im:message` / `im:message:send_as_bot` (per your tenant policy). If invite returns `pending_approval_id_list`, wait for approval and retry. |
 
 ## `content` Format Reference
 
