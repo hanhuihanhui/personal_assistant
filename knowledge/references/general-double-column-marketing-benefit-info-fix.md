@@ -9,7 +9,6 @@ tags: [search_loader, impression, double_column, marketing, incident]
 related:
   - ../index.md
   - ../methods/lark-bot-send-to-existing-group.md
-  - ./apply-benefit-api-banner-log-data-fix.md
 ---
 
 # 背景
@@ -20,7 +19,7 @@ related:
 
 # 触发与线索
 
-- 讨论群内定位到一个可回放样例 `log_id=202604082027037CC6F557409503C67B61`。
+- 讨论群内定位到一个可回放样例 `trace_id=202604082027037CC6F557409503C67B61`。
 - 在该样例对应的 impression 文件中确认缺少 `marketing_benefit_info`（群内同学提供了 impression 文件附件用于核对）。
 - 同时，现有新链路中已存在写入 `marketing_benefit_info` 的代码路径，说明问题更可能出在“部分流量仍在走的旧链路”。
 
@@ -67,5 +66,5 @@ impressionLog.Extra["marketing_benefit_info"] = biz_admin.GetMarketingBenefitInf
 
 # 验证建议
 
-- 回放验证：使用样例 `log_id=202604082027037CC6F557409503C67B61`，对比修复前后最终 impression，确认 `marketing_benefit_info` 出现且内容符合预期。
+- 回放验证：使用样例 `trace_id=202604082027037CC6F557409503C67B61`，对比修复前后最终 impression，确认 `marketing_benefit_info` 出现且内容符合预期。
 - 线上抽样：按“综搜双列”维度抽样观察 `marketing_benefit_info` 覆盖率，确认不再出现系统性缺失。
